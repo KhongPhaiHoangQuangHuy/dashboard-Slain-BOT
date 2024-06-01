@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Không Phải Hoàng Quang Huy</title>
+    <link href="./src/img/Slain.png" rel="icon">
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #cfcfcf;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 90%;
+            height: 90%;
+            background-color: rgba(30, 30, 30, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+        .header p {
+            font-size: 1em;
+            color: #888;
+        }
+        .command-line {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            line-height: 1.5;
+        }
+        .command-line .command {
+            color: #0f0;
+        }
+        .command-line .info {
+            color: #0ff;
+        }
+        .command-line .error {
+            color: #f00;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        #command-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #1e1e1e;
+            color: #cfcfcf;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1em;
+            margin: 0;
+            border-top: 1px solid #555;
+        }
+        a {
+            color: #0ff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Không Phải Hoàng Quang Huy</h1>
+            <p>Current version: 0.0.1 - made with <3 by Hoàng Quang Huy.</p>
+        </div>
+        <div class="command-line" id="command-line">
+            <!-- Dòng thông báo sẽ được thêm vào đây -->
+        </div>
+        <input type="text" id="command-input" placeholder="> Type a command..." onkeydown="handleCommand(event)">
+        <div class="footer">
+            &copy; 2024 Không Phải Hoàng Quang Huy. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        const messages = [
+            "[Website Info]: Welcome! Currently running on latest version 0.0.1(beta)",
+            "[Website Info]: Wrapping everything up...",
+            "[Website Info]: Loading landing page",
+            "[Website Info]: Loading assets",
+            "[Website Info]: Starting web server on 0.0.0.0:443",
+            "[Website Info]: Preparing web server: 21%",
+            "[Website Info]: Preparing web server: 99%",
+            "[Website Info]: Done! Type \"/help\" or \"?\" for help"
+        ];
+
+        const musicFiles = [
+            "./src/music/làm người luôn yêu em.mp3",
+            "./src/music/em đừng đi.mp3",
+            "./src/music/cơn mưa ngang qua.mp3"
+        ];
+
+        let index = 0;
+
+        function getTime() {
+            const now = new Date();
+            return now.toTimeString().split(' ')[0];
+        }
+
+        function displayNextMessage() {
+            if (index < messages.length) {
+                const commandLine = document.getElementById('command-line');
+                const message = messages[index];
+                const p = document.createElement('p');
+                p.textContent = `[${getTime()}] ${message}`;
+                p.className = 'info';
+                commandLine.appendChild(p);
+                commandLine.scrollTop = commandLine.scrollHeight;
+                index++;
+                setTimeout(displayNextMessage, 1000); // Thời gian trễ 1 giây giữa các thông báo
+            }
+        }
+
+        function handleCommand(event) {
+            if (event.key === 'Enter') {
+                const commandLine = document.getElementById('command-line');
+                const commandInput = document.getElementById('command-input');
+                const commandText = commandInput.value.trim();
+                if (commandText === '') return;
+
+                const newCommand = document.createElement('p');
+                newCommand.textContent = `> ${commandText}`;
+                newCommand.className = 'command';
+
+                let response = document.createElement('p');
+
+                switch (commandText.toLowerCase()) {
+                    case '/help':
+                        response.textContent = `[${getTime()}] [Website Info]: Available commands: /help, /facebook, /youtube, /steam, /discord, /music`;
+                        response.className = 'info';
+                        break;
+                    case '/facebook':
+                        response.innerHTML = `[${getTime()}] [Website Info]: Be friends with me: <a href="https://www.facebook.com/hoangquanghuy17081999/" target="_blank">Facebook link</a>`;
+                        response.className = 'info';
+                        break;
+                    case '/youtube':
+                        response.innerHTML = `[${getTime()}] [Website Info]: Watch my video?: <a href="https://www.youtube.com/channel/UCUNCnH9qCYrxgggI9YJY9QQ/" target="_blank">Click here</a>`;
+                        response.className = 'info';
+                        break;
+                    case '/steam':
+                        response.innerHTML = `[${getTime()}] [Website Info]: Play with me: <a href="https://steamcommunity.com/id/KhongPhaiHoangQuangHuy/" target="_blank">This is my account</a>`;
+                        response.className = 'info';
+                        break;
+                    case '/discord':
+                        response.innerHTML = `[${getTime()}] [Website Info]: Join our Discord server: <a href="https://discord.gg/g9NCQnhK6u" target="_blank">Discord link</a>`;
+                        response.className = 'info';
+                        break;
+                    case '/music':
+                        const randomMusic = musicFiles[Math.floor(Math.random() * musicFiles.length)];
+                        const audioPlayer = document.createElement('audio');
+                        audioPlayer.controls = true;
+                        audioPlayer.src = randomMusic;
+                        audioPlayer.style.display = 'block';
+                        audioPlayer.play();
+                        const fileName = randomMusic.split('/').pop(); // Lấy tên file từ đường dẫn
+                        response.textContent = `[${getTime()}] [Website Info]: Now playing: ${fileName}`;
+                        response.className = 'info';
+                        commandLine.appendChild(newCommand);
+                        commandLine.appendChild(response);
+                        commandLine.appendChild(audioPlayer);
+                        commandLine.scrollTop = commandLine.scrollHeight;
+                        commandInput.value = '';
+                        return;
+                    default:
+                        response.textContent = `[${getTime()}] [Website Info]: Invalid command! Type "/help" or "?" to get a list of commands`;
+                        response.className = 'error';
+                }
+
+                commandLine.appendChild(newCommand);
+                commandLine.appendChild(response);
+                commandInput.value = '';
+                commandLine.scrollTop = commandLine.scrollHeight;
+            }
+        }
+
+        // Hiển thị thông báo từ từ khi trang được tải
+        window.onload = function() {
+            displayNextMessage();
+        }
+    </script>
+</body>
+</html>
