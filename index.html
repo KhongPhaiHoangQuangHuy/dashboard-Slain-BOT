@@ -122,13 +122,27 @@
             return now.toTimeString().split(' ')[0];
         }
 
+        function typeWriter(element, text, i, callback) {
+            if (i < text.length) {
+                element.innerHTML = text.substring(0, i + 1) + '<span aria-hidden="true">|</span>';
+                setTimeout(() => {
+                    typeWriter(element, text, i + 1, callback);
+                }, 50);
+            } else {
+                element.innerHTML = text; // Remove the cursor after typing is done
+                if (typeof callback == 'function') {
+                    callback();
+                }
+            }
+        }
+
         function displayNextMessage() {
             if (index < messages.length) {
                 const commandLine = document.getElementById('command-line');
                 const message = messages[index];
                 const p = document.createElement('p');
-                p.textContent = `[${getTime()}] ${message}`;
                 p.className = 'info';
+                p.textContent = `[${getTime()}] ${message}`;
                 commandLine.appendChild(p);
                 commandLine.scrollTop = commandLine.scrollHeight;
                 index++;
@@ -137,66 +151,90 @@
         }
 
         function handleCommand(event) {
-            if (event.key === 'Enter') {
-                const commandLine = document.getElementById('command-line');
-                const commandInput = document.getElementById('command-input');
-                const commandText = commandInput.value.trim();
-                if (commandText === '') return;
+    if (event.key === 'Enter') {
+        const commandLine = document.getElementById('command-line');
+        const commandInput = document.getElementById('command-input');
+        const commandText = commandInput.value.trim();
+        if (commandText === '') return;
 
-                const newCommand = document.createElement('p');
-                newCommand.textContent = `> ${commandText}`;
-                newCommand.className = 'command';
+        const newCommand = document.createElement('p');
+        newCommand.className = 'command';
 
-                let response = document.createElement('p');
+        let response = document.createElement('p');
+        let link;
 
-                switch (commandText.toLowerCase()) {
-                    case '/help':
-                        response.textContent = `[${getTime()}] [Website Info]: Available commands: /help, /facebook, /youtube, /steam, /discord, /music`;
-                        response.className = 'info';
-                        break;
-                    case '/facebook':
-                        response.innerHTML = `[${getTime()}] [Website Info]: Be friends with me: <a href="https://www.facebook.com/hoangquanghuy17081999/" target="_blank">Facebook link</a>`;
-                        response.className = 'info';
-                        break;
-                    case '/youtube':
-                        response.innerHTML = `[${getTime()}] [Website Info]: Watch my video?: <a href="https://www.youtube.com/channel/UCUNCnH9qCYrxgggI9YJY9QQ/" target="_blank">Click here</a>`;
-                        response.className = 'info';
-                        break;
-                    case '/steam':
-                        response.innerHTML = `[${getTime()}] [Website Info]: Play with me: <a href="https://steamcommunity.com/id/KhongPhaiHoangQuangHuy/" target="_blank">This is my account</a>`;
-                        response.className = 'info';
-                        break;
-                    case '/discord':
-                        response.innerHTML = `[${getTime()}] [Website Info]: Join our Discord server: <a href="https://discord.gg/g9NCQnhK6u" target="_blank">Discord link</a>`;
-                        response.className = 'info';
-                        break;
-                    case '/music':
-                        const randomMusic = musicFiles[Math.floor(Math.random() * musicFiles.length)];
-                        const audioPlayer = document.createElement('audio');
-                        audioPlayer.controls = true;
-                        audioPlayer.src = randomMusic;
-                        audioPlayer.style.display = 'block';
-                        audioPlayer.play();
-                        const fileName = randomMusic.split('/').pop(); // Lấy tên file từ đường dẫn
-                        response.textContent = `[${getTime()}] [Website Info]: Now playing: ${fileName}`;
-                        response.className = 'info';
-                        commandLine.appendChild(newCommand);
-                        commandLine.appendChild(response);
-                        commandLine.appendChild(audioPlayer);
-                        commandLine.scrollTop = commandLine.scrollHeight;
-                        commandInput.value = '';
-                        return;
-                    default:
-                        response.textContent = `[${getTime()}] [Website Info]: Invalid command! Type "/help" or "?" to get a list of commands`;
-                        response.className = 'error';
-                }
-
+        switch (commandText.toLowerCase()) {
+            case '?':
+                response.textContent = `[${getTime()}] [Website Info]: Available commands: /help, /facebook, /youtube, /steam, /discord, /music`;
+                response.className = 'info';
+                break;
+            case '/help':
+                response.textContent = `[${getTime()}] [Website Info]: Available commands: /help, /facebook, /youtube, /steam, /discord, /music`;
+                response.className = 'info';
+                break;
+            case '/facebook':
+                link = "https://www.facebook.com/hoangquanghuy17081999/";
+                break;
+            case '/youtube':
+                link = "https://www.youtube.com/channel/UCUNCnH9qCYrxgggI9YJY9QQ/";
+                break;
+            case '/steam':
+                link = "https://steamcommunity.com/id/KhongPhaiHoangQuangHuy/";
+                break;
+            case '/discord':
+                link = "https://discord.gg/g9NCQnhK6u";
+                break;
+            case '/music':
+                const randomMusic = musicFiles[Math.floor(Math.random() * musicFiles.length)];
+                const audioPlayer = document.createElement('audio');
+                audioPlayer.controls = true;
+                audioPlayer.src = randomMusic;
+                audioPlayer.style.display = 'block';
+                audioPlayer.play();
+                const fileName = randomMusic.split('/').pop(); // Lấy tên file từ đường dẫn
+                response.textContent = `[${getTime()}] [Website Info]: Now playing: ${fileName}`;
+                response.className = 'info';
                 commandLine.appendChild(newCommand);
                 commandLine.appendChild(response);
-                commandInput.value = '';
+                commandLine.appendChild(audioPlayer);
                 commandLine.scrollTop = commandLine.scrollHeight;
-            }
+                commandInput.value = '';
+                return;
+            default:
+                response.textContent = `[${getTime()}] [Website Info]: Invalid command! Type "/help" or "?" to get a list of commands`;
+                response.className = 'error';
         }
+
+        newCommand.textContent = `> ${commandText}`;
+        commandLine.appendChild(newCommand);
+        commandLine.appendChild(response);
+        commandInput.value = '';
+        commandLine.scrollTop = commandLine.scrollHeight;
+
+        if (link) {
+            const confirmationMessage = `[${getTime()}] [Website Info]: You are about to be redirected to ${link}. Do you want to proceed?`;
+            typeWriter(response, confirmationMessage, 0, () => {
+                if (window.confirm(`You are about to be redirected to ${link}. Do you want to proceed?`)) {
+                    const successMessage = document.createElement('p');
+                    successMessage.className = 'info';
+                    typeWriter(successMessage, `[${getTime()}] [Website Info]: Redirecting to ${link}...`, 0, () => {
+                        window.open(link, "_blank");
+                    });
+                    commandLine.appendChild(successMessage);
+                } else {
+                    const cancelMessage = document.createElement('p');
+                    cancelMessage.className = 'info';
+                    typeWriter(cancelMessage, `[${getTime()}] [Website Info]: You have canceled the redirection.`, 0);
+                    commandLine.appendChild(cancelMessage);
+                }
+                commandLine.scrollTop = commandLine.scrollHeight;
+            });
+        } else {
+            typeWriter(response, response.textContent, 0);
+        }
+    }
+}
+
 
         // Hiển thị thông báo từ từ khi trang được tải
         window.onload = function() {
