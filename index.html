@@ -85,7 +85,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Không Phải Hoàng Quang Huy</h1>
+            <h1>Slain BOT</h1>
             <p>Current version: 0.0.1 - made with <3 by Hoàng Quang Huy.</p>
         </div>
         <div class="command-line" id="command-line">
@@ -165,18 +165,18 @@
 
         switch (commandText.toLowerCase()) {
             case '?':
-                response.textContent = `[${getTime()}] [Website Info]: Available commands: /help, /facebook, /youtube, /steam, /discord, /music`;
+                response.textContent = `[${getTime()}] [Website Info]: Available commands: /help, /invite, /tos, /steam, /discord, /music`;
                 response.className = 'info';
                 break;
             case '/help':
-                response.textContent = `[${getTime()}] [Website Info]: Available commands: /help, /facebook, /youtube, /steam, /discord, /music`;
+                response.textContent = `[${getTime()}] [Website Info]: Available commands: /help, /invite, /youtube, /steam, /discord, /music`;
                 response.className = 'info';
                 break;
-            case '/facebook':
-                link = "https://www.facebook.com/hoangquanghuy17081999/";
+            case '/invite':
+                link = "https://discord.com/api/oauth2/authorize?client_id=1141521647241809940&scope=bot+applications.commands&permissions=1374891928950";
                 break;
-            case '/youtube':
-                link = "https://www.youtube.com/channel/UCUNCnH9qCYrxgggI9YJY9QQ/";
+            case '/tos':
+                link = "tos.html";
                 break;
             case '/steam':
                 link = "https://steamcommunity.com/id/KhongPhaiHoangQuangHuy/";
