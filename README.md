@@ -1,1 +1,3 @@
-https://camo.githubusercontent.com/dd117795ef319937492bc19c3318ba03f765ebec8db04e4b3c982397034abfa3/687474703a2f2f72616e646f6a732e636f6d2f696d616765732f62617273536d616c6c5472616e73706172656e744261636b67726f756e642e676966
+
+
+![Animated footer gif](http://randojs.com/images/barsSmallTransparentBackground.gif)
